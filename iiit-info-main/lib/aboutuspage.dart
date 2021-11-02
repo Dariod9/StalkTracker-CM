@@ -28,7 +28,7 @@ class aboutuspage extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.info_outline_rounded,
-                    color: Colors.white,
+                    color: Colors.amberAccent,
                   )
                 ],
               ),
@@ -38,33 +38,51 @@ class aboutuspage extends StatelessWidget {
               child: Column(
                   children: [
                     Text(
-                      'Project Name : Stalk Tracker',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      'Stalk Tracker',
+                      style: TextStyle(color: Colors.blue, fontSize: 24),
                      ),
                     Padding(padding: EdgeInsets.only(top:20)),
                     Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                  children: [
-                  Text(
-                    'Group members : ',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                    Padding(padding: EdgeInsets.only(top:15)),
-                    Column(
-                    children: [
-                      Text(
-                        'Dário Matos (89288)',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      Text(
-                        'Pedro Almeida (89205)',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ],
-                  )
-                ],
-              )),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Group members: ',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                          Padding(padding: EdgeInsets.only(top:15)),
+                          ListTile(
+                            title: Text("Dário Matos",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                            subtitle: Text("89288",
+                              style: TextStyle(
+                                  color: Colors.grey
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            title: Text("Pedro Almeida",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                            subtitle: Text("89205",
+                              style: TextStyle(
+                                  color: Colors.grey
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ),
+                    Container(
+                        child: SizedBox(height: 250, width: 200, child:Image(image: AssetImage("assets/ua-logo.png") ))
+                    )
                   ]
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 class historypage extends StatelessWidget {
+
   void mailLaunch(command) async {
     if (await canLaunch(command)) {
       await launch(command);
