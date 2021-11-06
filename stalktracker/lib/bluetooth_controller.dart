@@ -14,18 +14,24 @@ class BluetoothController {
   static final FlutterBlue blue = FlutterBlue.instance;
 
   static getDevices(){
-    blue.startScan(timeout: Duration(seconds: 30));
-    List<Contact> contactos= <Contact>[];
-    var subscription = blue.scanResults.listen((results) {
-      // do something with scan results
-      if(results.isNotEmpty) {
-        for (ScanResult r in results) {
-          // print('${r.device.name} found! rssi: ${r.rssi}');
-          contactos.add(new Contact(r.device.name, r.rssi));
+    List<Contact> contactos = <Contact>[];
+
+    try {
+      blue.startScan(timeout: Duration(seconds: 3));
+      var subscription = blue.scanResults.listen((results) {
+        // do something with scan results
+        if (results.isNotEmpty) {
+          for (ScanResult r in results) {
+            // print('${r.device.name} found! rssi: ${r.rssi}');
+            contactos.add(new Contact(r.device.name, r.rssi));
+          }
         }
-      }
-    });
-    blue.stopScan();
+      });
+      blue.stopScan();
+    }
+    catch(e) {
+      contactos=<Contact>[];
+    }
 
     return contactos;
 

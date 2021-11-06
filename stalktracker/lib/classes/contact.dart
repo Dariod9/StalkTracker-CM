@@ -24,9 +24,22 @@ class Contact {
     _proximity = value;
   }
 
+  int distance=1;
+
   // constructor
   Contact(String name, int proximity) {
     this.name = name;
     this.proximity = proximity;
+    if(proximity<-60 || proximity>-91) distance=2;
+    else if(proximity<-90) distance=3;
+  }
+
+  Widget distanceIcon(Contact c){
+    switch(distance){
+      case 1: return Icon(Icons.signal_cellular_4_bar, color: Colors.green);
+      case 2: return Icon(Icons.signal_cellular_4_bar, color: Colors.orangeAccent);
+      case 3: return Icon(Icons.signal_cellular_4_bar, color: Colors.red);
+      default:     return Icon(Icons.dangerous, color: Colors.white);
+    }
   }
 }

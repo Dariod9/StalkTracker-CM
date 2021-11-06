@@ -7,6 +7,8 @@ import 'package:hackathon/drawers/loginmaindrawer.dart';
 
 import 'bluetooth_controller.dart';
 import 'classes/contact.dart';
+import 'package:loading_animations/loading_animations.dart';
+
 
 class afterloginapp extends StatelessWidget {
   @override
@@ -84,16 +86,23 @@ class _loginpageState extends State<afterloginmainpage> {
                           height: 300,
                           child: listaDinamica()
                           ),
+                // LoadingRotating.square(
+                //   borderColor: Colors.white70,
+                //   borderSize:0,
+                //   size: 30.0,
+                //   backgroundColor: Colors.white,
+                //   duration: Duration(milliseconds: 2000),
+                // ),
                         FloatingActionButton.extended(
                           onPressed:() async {
-                            contacts=BluetoothController.getDevices();
-                            await Future.delayed(const Duration(seconds: 2), (){});
-                            print("ESPEREI");
-                            setState(() {
+                              contacts=BluetoothController.getDevices();
+                              await Future.delayed(const Duration(seconds: 3), (){});
 
-                          });;
-                          },
-                          label:  Text("Recent Finds", style: TextStyle(color: Colors.black45, fontSize: 12, fontWeight: FontWeight.bold)),
+                              print("ESPEREI");
+                              setState(() {
+                              });;
+                            },
+                          label:  Text("Recent Finds", style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold)),
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.black,
                         ),
@@ -108,12 +117,23 @@ class _loginpageState extends State<afterloginmainpage> {
 
   Widget listaDinamica(){
     return  new ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        shrinkWrap: true,
+        physics: ScrollPhysics(),
         itemCount: contacts.length,
         itemBuilder: (BuildContext ctxt, int index){
           print("LISTA:"+contacts.length.toString());
           if(contacts.length==0) return new Text("No devices!");
-          else return new Text(contacts[index].name+contacts[index].proximity.toString(), style: TextStyle(color: Colors.white),);
+          else return _drawTile(contacts[index]);
         }
+    );
+  }
+
+  Widget _drawTile(Contact c){
+    return ListTile(
+      leading: Icon(Icons.bluetooth, color: Colors.white,),
+      title: new Text(c.name, style: TextStyle(color: Colors.white),),
+      trailing: c.distanceIcon(c)
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:hackathon/changepassword.dart';
 import 'package:hackathon/contactuspage.dart';
 import 'package:hackathon/login_controller.dart';
 import 'package:hackathon/main.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../friendspage.dart';
@@ -155,6 +156,22 @@ Drawer loginmaindrawer(BuildContext context) {
                   ));
             });
             Navigator.pop(context);
+          },
+        ),
+        SizedBox(height: 100),
+        ListTile(
+          title: FloatingActionButton.extended(
+            onPressed: () async {
+              UrlLauncher.launch("tel://112");
+            },
+            label: Text('Emergency'),
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white70,
+          ),
+          onTap: () async {
+            controller.logout(context);
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.remove('gmail');
           },
         ),
       ],
