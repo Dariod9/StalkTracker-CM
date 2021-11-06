@@ -1,16 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hackathon/afterloginmainpage.dart';
-import 'package:hackathon/forgotpassword.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hackathon/signinpage.dart';
 
-class signinpage extends StatefulWidget {
+class signuppage extends StatefulWidget {
   @override
-  State<signinpage> createState() => _loginpageState();
+  State<signuppage> createState() => _loginpageState();
 }
 
-class _loginpageState extends State<signinpage> {
+class _loginpageState extends State<signuppage> {
   bool _isObscure = true;
   final usernamecontroller = TextEditingController();
   final passwordcontroller = TextEditingController();
@@ -21,7 +18,7 @@ class _loginpageState extends State<signinpage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(
-          'SignIn',
+          'Signup',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -34,7 +31,7 @@ class _loginpageState extends State<signinpage> {
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    'SignIn',
+                    'Create an account',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -83,16 +80,6 @@ class _loginpageState extends State<signinpage> {
                   ),
                 ),
               ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => forgotpassword(),
-                        ));
-                  },
-                  child: Text('Forgot Password',
-                      style: TextStyle(color: Colors.white, fontSize: 15))),
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Container(
@@ -103,34 +90,22 @@ class _loginpageState extends State<signinpage> {
                       borderRadius: BorderRadius.circular(20)),
                   child: TextButton(
                       onPressed: () {
+                        print(usernamecontroller.text);
+                        print(passwordcontroller.text);
                         FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
+                            .createUserWithEmailAndPassword(
                                 email: usernamecontroller.text,
                                 password: passwordcontroller.text)
-                            .then((value) async {
-                          if (FirebaseAuth
-                                  .instance.currentUser?.emailVerified ==
-                              true) {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            prefs.setString('Email', usernamecontroller.text);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => afterloginmainpage(),
-                                ));
-                          } else {
-                            return Fluttertoast.showToast(
-                                msg: 'User not verified',
-                                gravity: ToastGravity.BOTTOM,
-                                fontSize: 18,
-                                backgroundColor: Colors.white,
-                                textColor: Colors.black);
-                          }
-                        });
+                            .then((value) => FirebaseAuth.instance.currentUser
+                                ?.sendEmailVerification()
+                                .then((value) => Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => signinpage(),
+                                    ))));
                       },
                       child: Text(
-                        'Signin',
+                        'Signup',
                         style: TextStyle(color: Colors.black),
                       )),
                 ),

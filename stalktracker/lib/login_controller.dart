@@ -21,6 +21,8 @@ class LoginController extends GetxController {
   }
 
   login(BuildContext context) async {
+    print("AQUU ->");
+
     googleAccount.value = await _googleSignIn.signIn();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('gmail', _googleSignIn.currentUser?.email ?? '');

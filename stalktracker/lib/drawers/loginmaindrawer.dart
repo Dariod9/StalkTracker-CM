@@ -9,6 +9,9 @@ import 'package:hackathon/login_controller.dart';
 import 'package:hackathon/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../friendspage.dart';
+import '../historypage.dart';
+
 final controller = Get.put(LoginController());
 Drawer loginmaindrawer(BuildContext context) {
   return Drawer(
@@ -56,6 +59,37 @@ Drawer loginmaindrawer(BuildContext context) {
                 context,
                 MaterialPageRoute(
                   builder: (context) => afterloginmainpage(),
+                ));
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.star,
+            color: Colors.white,
+          ),
+          title: Text(
+            'Friends List',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => friendspage()));
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.calendar_today,
+            color: Colors.white,
+          ),
+          title: Text(
+            'History',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => historypage(),
                 ));
           },
         ),

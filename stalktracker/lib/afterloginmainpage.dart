@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:hackathon/collegeinfo.dart';
 import 'package:hackathon/drawers/loginmaindrawer.dart';
 
+import 'bluetooth_controller.dart';
+import 'classes/contact.dart';
+
 class afterloginapp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -41,6 +44,8 @@ class afterloginmainpage extends StatefulWidget {
 class _loginpageState extends State<afterloginmainpage> {
   final Stream<QuerySnapshot> _collegesList =
       FirebaseFirestore.instance.collection('College_List').snapshots();
+
+  List<Contact> contacts= <Contact>[];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +53,68 @@ class _loginpageState extends State<afterloginmainpage> {
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: Text(
-            'IIIT info',
+            'Stalk Tracker',
             style: TextStyle(color: Colors.white),
           ),
         ),
         drawer: loginmaindrawer(context),
-        body: Userinfo());
+        // body: Userinfo());
+    body: Center(
+      // padding: const EdgeInsets.all(8),
+          child:
+            Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              SizedBox(
+                height: 600,
+                child:
+                  Column(
+                      children: [
+                        CircleAvatar(
+                          //backgroundImage:
+                          radius: 50,
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 20)),
+                        Text(FirebaseAuth.instance.currentUser?.email ?? '',
+                            style: TextStyle(color: Colors.white, fontSize: 12)),
+                        Padding(padding: EdgeInsets.only(top: 45)),
+                        Text("Recent Finds", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                        SizedBox(
+                          height: 300,
+                          child: listaDinamica()
+                          ),
+                        FloatingActionButton.extended(
+                          onPressed:() async {
+                            contacts=BluetoothController.getDevices();
+                            await Future.delayed(const Duration(seconds: 2), (){});
+                            print("ESPEREI");
+                            setState(() {
+
+                          });;
+                          },
+                          label:  Text("Recent Finds", style: TextStyle(color: Colors.black45, fontSize: 12, fontWeight: FontWeight.bold)),
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                        ),
+                      ]
+
+                  ))
+    ],
+    ),
+    )
+    );
+  }
+
+  Widget listaDinamica(){
+    return  new ListView.builder(
+        itemCount: contacts.length,
+        itemBuilder: (BuildContext ctxt, int index){
+          print("LISTA:"+contacts.length.toString());
+          if(contacts.length==0) return new Text("No devices!");
+          else return new Text(contacts[index].name+contacts[index].proximity.toString(), style: TextStyle(color: Colors.white),);
+        }
+    );
   }
 }
 

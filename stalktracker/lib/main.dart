@@ -109,17 +109,17 @@ class _loginpageState extends State<loginpage> {
                   SizedBox(
                     height: 15,
                   ),
-                  // FloatingActionButton.extended(
-                  //   onPressed: () async {
-                  //     controller.login(context);
-                  //   },
-                  //   icon: Icon(
-                  //     FontAwesomeIcons.google,
-                  //   ),
-                  //   label: Text('Sign In With Google'),
-                  //   backgroundColor: Colors.white,
-                  //   foregroundColor: Colors.black,
-                  // ),
+                  FloatingActionButton.extended(
+                    onPressed: () async {
+                      controller.login(context);
+                    },
+                    icon: Icon(
+                      FontAwesomeIcons.google,
+                    ),
+                    label: Text('Sign In With Google'),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                  ),
                   TextButton(
                       onPressed: () {
                         Navigator.push(
