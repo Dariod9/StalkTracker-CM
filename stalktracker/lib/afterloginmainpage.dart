@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon/collegeinfo.dart';
 import 'package:hackathon/drawers/loginmaindrawer.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'bluetooth_controller.dart';
 import 'classes/contact.dart';
@@ -11,6 +12,7 @@ import 'package:loading_animations/loading_animations.dart';
 
 
 class afterloginapp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -44,6 +46,8 @@ class afterloginmainpage extends StatefulWidget {
 }
 
 class _loginpageState extends State<afterloginmainpage> {
+  final ImagePicker _picker = ImagePicker();
+  XFile? image=null;
   final Stream<QuerySnapshot> _collegesList =
       FirebaseFirestore.instance.collection('College_List').snapshots();
 
@@ -73,10 +77,21 @@ class _loginpageState extends State<afterloginmainpage> {
                 child:
                   Column(
                       children: [
-                        CircleAvatar(
-                          //backgroundImage:
-                          radius: 50,
+                        ElevatedButton(
+                          onPressed: () async {
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: Colors.blue,
+                            radius: 50,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(2),
+                            primary: Colors.blue, // <-- Button color
+                            onPrimary: Colors.white70, // <-- Splash color
+                          ),
                         ),
+
                         Padding(padding: EdgeInsets.only(top: 20)),
                         Text(FirebaseAuth.instance.currentUser?.email ?? '',
                             style: TextStyle(color: Colors.white, fontSize: 12)),
