@@ -1,3 +1,4 @@
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
@@ -18,10 +19,29 @@ class contactuspage extends StatelessWidget {
       print('Could not launch $url');
     }
   }
+  
+  Widget _showQrCode(BuildContext context) {
+    return new AlertDialog(
+      title: Text("Scan for a surprise"),
+      content: new Container(
+        child: QrImage(data: "https://www.youtube.com/watch?v=fcZXfoB2f70"),
+        width: 200,
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Close'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -53,6 +73,12 @@ class contactuspage extends StatelessWidget {
                 backgroundImage: AssetImage("assets/dario.png"),
                 radius: 50,
               ),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => _showQrCode(context),
+                );
+              },
               title: Text("Dário Matos",
                 style: TextStyle(
                     color: Colors.white,
@@ -132,63 +158,6 @@ class contactuspage extends StatelessWidget {
                   ],
                 ),
             ),
-            // Row(
-            //   children: [
-            //     Padding(
-            //       padding: const EdgeInsets.all(8.0),
-            //       child: Icon(
-            //         Icons.mail_outline_outlined,
-            //         color: Colors.white,
-            //       ),
-            //     ),
-            //     TextButton(
-            //         onPressed: () {
-            //           mailLaunch('mailto:dario.matos@ua.pt?');
-            //         },
-            //         child: Text(
-            //           'dario.matos@ua.pt',
-            //           style: TextStyle(fontSize: 20),
-            //         )),
-            //   ],
-            // ),
-            // Row(
-            //   children: [
-            //     Padding(
-            //       padding: const EdgeInsets.all(8.0),
-            //       child: Icon(
-            //         Icons.mail_outline_outlined,
-            //         color: Colors.white,
-            //       ),
-            //     ),
-            //     TextButton(
-            //         onPressed: () {
-            //           mailLaunch('mailto:pedro22@ua.pt?');
-            //         },
-            //         child: Text(
-            //           'pedro22@ua.pt',
-            //           style: TextStyle(fontSize: 20),
-            //         ))
-            //   ],
-            // ),
-            // Row(
-            //   children: [
-            //     Padding(
-            //       padding: const EdgeInsets.all(8.0),
-            //       child: Icon(
-            //         Icons.phone,
-            //         color: Colors.white,
-            //       ),
-            //     ),
-            //     TextButton(
-            //         onPressed: () {
-            //           mailLaunch('tel:+917989772884');
-            //         },
-            //         child: Text(
-            //           '+91 79897 72884',
-            //           style: TextStyle(fontSize: 20),
-            //         )),
-            //   ],
-            // ),
           ],
         ),
       ),
