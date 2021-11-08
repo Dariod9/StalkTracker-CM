@@ -2,6 +2,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hackathon/collegeinfo.dart';
 import 'package:hackathon/drawers/loginmaindrawer.dart';
 import 'package:image_picker/image_picker.dart';
@@ -110,8 +111,17 @@ class _loginpageState extends State<afterloginmainpage> {
                 // ),
                         FloatingActionButton.extended(
                           onPressed:() async {
-                              contacts=BluetoothController.getDevices();
-                              await Future.delayed(const Duration(seconds: 3), (){});
+                            contacts=<Contact>[];
+                            // print("LISTA1:"+contacts.length.toString());
+                            contacts= await BluetoothController.getDevices2();
+                            Fluttertoast.showToast(
+                                msg: 'Please wait',
+                                gravity: ToastGravity.BOTTOM,
+                                fontSize: 18,
+                                backgroundColor: Colors.white,
+                                textColor: Colors.black);
+                            await Future.delayed(const Duration(seconds: 8), (){});
+                            // print("LISTA2:"+contacts.length.toString());
 
                               print("ESPEREI");
                               setState(() {
@@ -138,6 +148,7 @@ class _loginpageState extends State<afterloginmainpage> {
         itemCount: contacts.length,
         itemBuilder: (BuildContext ctxt, int index){
           print("LISTA:"+contacts.length.toString());
+          for(int i=0;i<contacts.length;i++) print(contacts[index].name+"\n");
           if(contacts.length==0) return new Text("No devices!");
           else return _drawTile(contacts[index]);
         }

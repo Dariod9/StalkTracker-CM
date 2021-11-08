@@ -24,11 +24,15 @@ class Contact {
     _proximity = value;
   }
 
+  String address="";
+
   int distance=1;
 
+
   // constructor
-  Contact(String name, int proximity) {
+  Contact(String name, int proximity, String address) {
     this.name = name;
+    this.address=address;
     this.proximity = proximity;
     if(proximity<-60 || proximity>-91) distance=2;
     else if(proximity<-90) distance=3;

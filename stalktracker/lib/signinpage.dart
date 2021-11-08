@@ -123,7 +123,7 @@ class _loginpageState extends State<signinpage> {
                                 ));
                           } else {
                             return Fluttertoast.showToast(
-                                msg: 'User not verified',
+                                msg: 'User not verified. Check Your Email!',
                                 gravity: ToastGravity.BOTTOM,
                                 fontSize: 18,
                                 backgroundColor: Colors.white,
