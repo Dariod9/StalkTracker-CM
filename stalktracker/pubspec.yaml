@@ -51,6 +51,7 @@ dependencies:
   flutter_bluetooth_serial:
   flutter_blue: ^0.8.0
   qr_flutter: ^4.0.0
+  local_auth:
 #  flutter_native_splash: ^1.3.1
 
 

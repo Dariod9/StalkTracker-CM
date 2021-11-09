@@ -1,5 +1,7 @@
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:flutter/services.dart';
 
 
 class fromDateWidget extends StatelessWidget {
@@ -24,6 +26,62 @@ class _historypageState extends State<historypage> {
 
   DateTime _selectedDate = DateTime.now();
   final _connectionsHistory = ["a", "b", "c", "d", "a", "b", "c", "d", "b", "c", "d", "a", "b", "c", "d"];
+
+  // biometrics
+  final LocalAuthentication _localAuthentication = LocalAuthentication();
+  bool _canCheckBiometrics = false;
+
+  Future<void> _checkBiometrics() async {
+    bool canCheckBiometrics = false;
+
+    try{
+      canCheckBiometrics = await _localAuthentication.canCheckBiometrics;
+    } on PlatformException catch(e){
+      print(e);
+    }
+
+    if (!mounted) return;
+
+    print(canCheckBiometrics);
+
+    setState(() {
+      _canCheckBiometrics = canCheckBiometrics;
+    });
+
+  }
+
+  Future<void> _authenticateNow() async {
+    bool isAuthenticated = false;
+
+    try{
+      isAuthenticated = await _localAuthentication.authenticate(
+        localizedReason: "Authenticate to see history.",
+
+      );
+    } on PlatformException catch(e){
+      print(e);
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      if (isAuthenticated) {
+        print("Authentication succeeded");
+      }
+      else {
+        Navigator.pop(context);
+      }
+    });
+
+  }
+
+  Future<void> _authentication() async {
+    _checkBiometrics();
+    await Future.delayed(const Duration(milliseconds: 1), (){});
+    if (_canCheckBiometrics){
+      _authenticateNow();
+    }
+  }
 
 
   void mailLaunch(command) async {
@@ -67,6 +125,11 @@ class _historypageState extends State<historypage> {
   }
 
   @override
+  void initState() {
+    _authentication();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
@@ -82,6 +145,12 @@ class _historypageState extends State<historypage> {
               'History',
               style: TextStyle(color: Colors.white),
             ),
+            // actions: <Widget>[
+            //   IconButton(
+            //       icon: Icon(Icons.fingerprint),
+            //       onPressed: _authentication,
+            //   )
+            // ],
           ),
           body: Padding(
             padding: EdgeInsets.all(3),
