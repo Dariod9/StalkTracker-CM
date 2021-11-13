@@ -1,49 +1,78 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
-import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hackathon/googleloginmain.dart';
-import 'package:hackathon/main.dart';
-import 'package:hackathon/signinpage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
+  part 'contact.g.dart';
+
+@HiveType(typeId: 1)
 class Contact {
-  String _name="";
+  Contact({required this.name, required this.proximity, required this.address, required this.date});
 
-  String get name => _name;
+  @HiveField(0)
+  String name;
 
-  set name(String value) {
-    _name = value;
-  }
+  @HiveField(1)
+  int proximity;
 
-  int _proximity=0;
+  @HiveField(2)
+  String address;
 
-  int get proximity => _proximity;
-
-  set proximity(int value) {
-    _proximity = value;
-  }
-
-  String address="";
-
-  int distance=1;
-
+  @HiveField(3)
+  DateTime? date;
+  // @HiveField(4)
+  // List<Figuras> asdasd
 
   // constructor
-  Contact(String name, int proximity, String address) {
-    this.name = name;
-    this.address=address;
-    this.proximity = proximity;
-    if(proximity<-60 || proximity>-91) distance=2;
-    else if(proximity<-90) distance=3;
+  // Contact(String name, int proximity, String address) {
+  //   this.name = name;
+  //   this.address=address;
+  //   this.proximity = proximity;
+  int getDistance(){
+    if(proximity<-60 || proximity>-91) return 2;
+    else if(proximity<-90) return 3;
+    else return 1;
   }
 
   Widget distanceIcon(Contact c){
-    switch(distance){
+    switch(getDistance()){
       case 1: return Icon(Icons.signal_cellular_4_bar, color: Colors.green);
       case 2: return Icon(Icons.signal_cellular_4_bar, color: Colors.orangeAccent);
       case 3: return Icon(Icons.signal_cellular_4_bar, color: Colors.red);
       default:     return Icon(Icons.dangerous, color: Colors.white);
     }
   }
+
+
+//   Future<void> something() async {
+// //     Directory appDocDirectory = await getApplicationDocumentsDirectory();
+// //
+// //     new Directory(appDocDirectory.path+'/'+'dir').create(recursive: true)
+// // // The created directory is returned as a Future.
+// //         .then((Directory directory) {
+// //       print('Path of New Dir: '+directory.path);
+// //     });
+//
+//     // var path = appDocDirectory.path;
+//     // Hive
+//     //   ..init(path)
+//     //   ..registerAdapter(ContactAdapter());
+//
+//     var box = await Hive.openBox('testBox');
+//
+//     var contact = Contact(
+//       name: 'BT_TESTE',
+//       proximity: -50,
+//       address: "yau",
+//     );
+//
+//     await box.put('teste', contact);
+//
+//     print("AÍ VAI TESTE:"+box.get('teste').toString()); // Dave: 22
+//     print(box.length);
+//     await Hive.close();
+//
+//   }
 }

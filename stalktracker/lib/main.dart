@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +10,14 @@ import 'package:hackathon/drawers/maindrawer.dart';
 import 'package:hackathon/login_controller.dart';
 import 'package:hackathon/signinpage.dart';
 import 'package:hackathon/signup/signup.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'classes/contact.dart';
+
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -19,6 +26,23 @@ void main() async {
       //? (gmail == null
       ? MyApp() // : afterlogingmailapp())
       : afterloginapp());
+  launchContactDB();
+
+}
+
+Future<void> launchContactDB() async {
+  Directory appDocDirectory = await getApplicationDocumentsDirectory();
+
+  new Directory(appDocDirectory.path + '/' + 'dir').create(recursive: true)
+// The created directory is returned as a Future.
+      .then((Directory directory) {
+    print('Path of New Dir: ' + directory.path);
+  });
+
+  var path = appDocDirectory.path;
+  Hive
+    ..init(path)
+    ..registerAdapter(ContactAdapter());
 }
 
 class MyApp extends StatelessWidget {
@@ -95,6 +119,7 @@ class _loginpageState extends State<loginpage> {
                       //   height: 230,
                       // ),
                   FloatingActionButton.extended(
+                    heroTag: "2",
                     onPressed: () async {
                       Navigator.push(
                           context,

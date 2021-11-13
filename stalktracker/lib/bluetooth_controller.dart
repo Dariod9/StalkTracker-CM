@@ -41,22 +41,24 @@ class BluetoothController {
 
   }
 
-
   static getDevices2(){
     List<Contact> contactos = <Contact>[];
 
     String nome="";
 
-
     FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
         print(r.device.address + " " + r.device.name.toString()+ " " +  r.rssi.toString());
         if(r.device.name!=null) nome=r.device.name!;
         else nome=r.device.address;
-        contactos.add(new Contact(nome, r.rssi, r.device.address));
+        contactos.add(new Contact(name: nome,proximity: r.rssi,address: r.device.address, date: DateTime.now()));
       });
     List<String> enderecos=<String>[];
-    contactos.forEach((f) {if(!enderecos.contains(f.address)) enderecos.add(f.address); else contactos.remove(f);});
-        // app.onDiscovery(r);
+    var finalCont=<Contact>[];
+
+    contactos.forEach((f) {if(!enderecos.contains(f.address)){ enderecos.add(f.address); finalCont.add(f);}});
+
+
+    // app.onDiscovery(r);
     return contactos;
 
   }

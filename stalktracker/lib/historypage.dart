@@ -1,7 +1,10 @@
+import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
+
+import 'classes/contact.dart';
 
 
 class fromDateWidget extends StatelessWidget {
@@ -25,7 +28,7 @@ class historypage extends StatefulWidget {
 class _historypageState extends State<historypage> {
 
   DateTime _selectedDate = DateTime.now();
-  final _connectionsHistory = ["a", "b", "c", "d", "a", "b", "c", "d", "b", "c", "d", "a", "b", "c", "d"];
+  var connectionsHistory = [];
 
   // biometrics
   final LocalAuthentication _localAuthentication = LocalAuthentication();
@@ -84,6 +87,26 @@ class _historypageState extends State<historypage> {
   }
 
 
+  void getConnections(DateTime date) async {
+    var box = await Hive.openBox('testBox');
+
+    connectionsHistory=[];
+
+    List userList = await box.values.toList();
+    // var toRemove = [];
+
+    // userList.forEach((element) {if(element.date != date) toRemove.add(element);});
+    List cont=userList.cast<Contact>();
+    // cont.forEach((element) {print(element.date);});
+    cont.removeWhere((element) => element.date.day != date.day);
+    connectionsHistory=cont;
+
+    print(connectionsHistory);
+
+    setState((){});
+    await Hive.close();
+  }
+
   void mailLaunch(command) async {
     if (await canLaunch(command)) {
       await launch(command);
@@ -100,6 +123,7 @@ class _historypageState extends State<historypage> {
         lastDate: DateTime.now());
 
     if (picked != null && picked != _selectedDate){
+      getConnections(picked);
       setState(() {
         _selectedDate = picked;
       });
@@ -111,16 +135,18 @@ class _historypageState extends State<historypage> {
         padding: const EdgeInsets.all(16.0),
         shrinkWrap: true,
         physics: ScrollPhysics(),
-        itemCount: _connectionsHistory.length,
+        itemCount: connectionsHistory.length,
         itemBuilder: (context, index) {
-          return _buildRow(_connectionsHistory[index]);
+          return _buildRow(connectionsHistory[index]);
         }
     );
   }
 
-  Widget _buildRow(String s){
+  Widget _buildRow(Contact c){
     return ListTile(
-      title: new Text(s, style: TextStyle(color: Colors.white),),
+        leading: Icon(Icons.bluetooth, color: Colors.white,),
+        title: new Text(c.name, style: TextStyle(color: Colors.white),),
+        trailing: c.distanceIcon(c)
     );
   }
 
@@ -173,4 +199,5 @@ class _historypageState extends State<historypage> {
           ),
         ));
   }
+
 }
