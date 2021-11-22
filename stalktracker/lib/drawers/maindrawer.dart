@@ -5,6 +5,8 @@ import 'package:hackathon/friendspage.dart';
 import 'package:hackathon/historypage.dart';
 import 'package:hackathon/main.dart';
 
+import '../blacklist.dart';
+
 Drawer maindrawer(BuildContext context) {
   return Drawer(
       child: Container(
@@ -51,6 +53,20 @@ Drawer maindrawer(BuildContext context) {
           onTap: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => friendspage()));
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.priority_high,
+            color: Colors.white,
+          ),
+          title: Text(
+            'Black List',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => blacklist()));
           },
         ),
         ListTile(

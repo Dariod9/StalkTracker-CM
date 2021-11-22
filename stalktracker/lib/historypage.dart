@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -153,6 +155,7 @@ class _historypageState extends State<historypage> {
   @override
   void initState() {
     _authentication();
+    getConnections(DateTime.now());
   }
 
   @override

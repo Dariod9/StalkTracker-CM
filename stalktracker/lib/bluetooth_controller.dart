@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hackathon/googleloginmain.dart';
 import 'package:hackathon/main.dart';
 import 'package:hackathon/signinpage.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'classes/contact.dart';
@@ -46,28 +47,118 @@ class BluetoothController {
 
     String nome="";
 
-    FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
+    FlutterBluetoothSerial.instance.startDiscovery().listen((r) async {
         print(r.device.address + " " + r.device.name.toString()+ " " +  r.rssi.toString());
         if(r.device.name!=null) nome=r.device.name!;
         else nome=r.device.address;
-        contactos.add(new Contact(name: nome,proximity: r.rssi,address: r.device.address, date: DateTime.now()));
+
+        var c;
+
+        var box = await Hive.openBox('testBox');
+
+        c = new Contact(name: nome,
+              proximity: r.rssi,
+              address: r.device.address,
+              date: DateTime.now(),
+              close: false,
+              black: false);
+
+
+        contactos.add(c);
       });
-    List<String> enderecos=<String>[];
-    var finalCont=<Contact>[];
 
-    contactos.forEach((f) {if(!enderecos.contains(f.address)){ enderecos.add(f.address); finalCont.add(f);}});
-
-
-    // app.onDiscovery(r);
     return contactos;
 
   }
 
-  // static discovery() {
-  //
-  // return contactos;
+  static Future<List<Contact>> getClose() async {
+    var box = await Hive.openBox('testBox');
+    print(box.keys);
+    // box.clear();
+    List<Contact> lista=[];
+    // print(box.length);
+    // print(box.getAt(0).toString());
+    // print(box.getAt(1).toString());
+    // print(box.getAt(2).toString());
+
+    try {
+      var result = await box.values;
+      for(Contact c in result) {
+        // print(c.close);
+        if (c.close) lista.add(c);
+      }
+    }
+    catch(e){
+      print("NÃO HA");
+      print(e);
+    }
+
+    return lista;
 
   }
+
+  static Future<List<Contact>> getBlack() async {
+    var box = await Hive.openBox('testBox');
+    List<Contact> lista=[];
+
+    try {
+      var result = await box.values;
+      for(Contact c in result) {
+        // print(c.close);
+        if (c.black==true) lista.add(c);
+      }
+    }
+    catch(e){
+      print("NÃO HA");
+      print(e);
+    }
+
+    return lista;
+
+  }
+
+
+  static Future<bool> existsInBox(String address) async {
+    // print("A verificar o "+address);
+    var box = await Hive.openBox('testBox');
+    var keys= await box.keys;
+
+    var r=false;
+    // print("Para o "+address);
+    for(var k in keys){
+      // print(k);
+      if(k==address){
+        r=true;
+        print("É igual ao "+k);
+      }
+    }
+
+    return r;
+
+    }
+
+
+  static Future<bool> isClose(Contact c) async{
+    var box = await Hive.openBox('testBox');
+    var close=false;
+
+    try {
+      // print(box.get(0));
+      // print("A ver o "+c.address);
+      var result = await box.get(c.address);
+      Contact got= result;
+      print(got.close);
+      print("WASSUP");
+      if(got.close) close=true;
+    }
+    catch(e){
+      print("NÃO EXISTE CONTACTO");
+      print(e);
+      return false;
+    }
+    return close;
+  }
+}
   // authentication() async {
   //   if (_googleSignIn.isSignedIn() == true) {
   //     SharedPreferences prefs = await SharedPreferences.getInstance();

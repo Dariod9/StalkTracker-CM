@@ -60,6 +60,7 @@ class _loginpageState extends State<afterloginmainpage> {
   final Stream<QuerySnapshot> _collegesList =
       FirebaseFirestore.instance.collection('College_List').snapshots();
 
+  List<Contact> contactsNow= <Contact>[];
   List<Contact> contacts= <Contact>[];
   @override
   Widget build(BuildContext context) {
@@ -125,7 +126,6 @@ class _loginpageState extends State<afterloginmainpage> {
                               scan();
                             }
                             else{
-                              print("ELSEEE");
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>  AlertDialog(
@@ -175,13 +175,94 @@ class _loginpageState extends State<afterloginmainpage> {
   }
 
   Widget _drawTile(Contact c){
-    return ListTile(
-      leading: Icon(Icons.bluetooth, color: Colors.white,),
-      title: new Text(c.name, style: TextStyle(color: Colors.white),),
-      trailing: c.distanceIcon(c)
-    );
-  }
+    if(c.black){
+      return ElevatedButton(
+      onLongPress: (){
+        showDialog(
+          context: context,
+          builder: (BuildContext context) =>  AlertDialog(
+            backgroundColor: Colors.white,
+            title: Text("Add to Friends List?"),
+            // content:
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Add'),
+                onPressed: () async {
+                  var box = await Hive.openBox('testBox');
+                  Contact copy= await box.get(c.address);
+                  print("Copia");
+                  print(copy);
+                  await box.delete(c.address);
+                  copy.close=true;
+                  await box.put(copy.address,copy);
 
+                  Navigator.of(context).pop();
+                },
+
+              ),
+              TextButton(
+                child: const Text('Close'),
+                onPressed:() { Navigator.of(context).pop();},
+
+              ),
+            ],
+          ));},
+      onPressed: () {  },
+        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+      child: ListTile(
+        leading: Icon(Icons.bluetooth, color: Colors.white,),
+        title: new Text(c.name, style: TextStyle(color: Colors.white),),
+        trailing: Wrap(
+          spacing: 10,
+          children: <Widget>[
+            Icon(Icons.warning_amber_outlined, color: Colors.red),
+            Icon(Icons.signal_cellular_4_bar, color: Colors.green)
+          ],
+        ),
+      ),
+    );}
+    else{
+    return ElevatedButton(
+    onLongPress: (){
+    showDialog(
+    context: context,
+    builder: (BuildContext context) =>  AlertDialog(
+    backgroundColor: Colors.white,
+    title: Text("Add to Friends List?"),
+    // content:
+    actions: <Widget>[
+    TextButton(
+    child: const Text('Add'),
+    onPressed: () async {
+    var box = await Hive.openBox('testBox');
+    Contact copy= await box.get(c.address);
+    print("Copia");
+    print(copy);
+    await box.delete(c.address);
+    copy.close=true;
+    await box.put(copy.address,copy);
+
+    Navigator.of(context).pop();
+    },
+    ),
+    TextButton(
+      child: const Text('Close'),
+      onPressed:() { Navigator.of(context).pop();},),],
+        ));},
+      onPressed: () {  },
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+      child: ListTile(
+        leading: Icon(Icons.bluetooth, color: Colors.white,),
+        title: new Text(c.name, style: TextStyle(color: Colors.white),),
+        trailing: Wrap(
+          spacing: -15,
+          children: <Widget>[
+          Icon(Icons.signal_cellular_4_bar, color: Colors.green),
+            ],
+            ),
+            ),
+          );}
+  }
   Future<void> scan() async {
 
     var box = await Hive.openBox('testBox');
@@ -189,6 +270,8 @@ class _loginpageState extends State<afterloginmainpage> {
     contacts=<Contact>[];
     // print("LISTA1:"+contacts.length.toString());
     contacts= await BluetoothController.getDevices2();
+
+    // contactsNow=contacts;
     Fluttertoast.showToast(
         msg: 'Please wait',
         gravity: ToastGravity.BOTTOM,
@@ -196,23 +279,93 @@ class _loginpageState extends State<afterloginmainpage> {
         backgroundColor: Colors.white,
         textColor: Colors.black);
     await Future.delayed(const Duration(seconds: 8), (){});
-    contacts.forEach((element) { addContact(element);});
+    print("Contactos:");
+    print(contacts);
+    await verifyBlacklist();
+
+    contacts.forEach((element) async {await verifyAndAdd(element);});
+    // print("A limpar");
+    await cleanContacts();
+    // print(contacts);
     // print(await box.getLength().toString());
     // Contact a = box.get(contacts[0].address);
 
     // box.close();
+    print("Ai vai state");
     setState(() {
     });;
   }
 
-  Future<void> addContact(Contact c) async {
-    var box = await Hive.openBox('testBox');
+  Future<void> verifyAndAdd(Contact c) async {
+    if(await BluetoothController.existsInBox(c.address)==false){
+      addContact(c);
+    }
+  }
 
+  Future<void> addContact(Contact c) async {
+    print("A ADICIONAR O "+c.address);
+    var box = await Hive.openBox('testBox');
+    while(box.containsKey(c.address)){
+      box.delete(c.address);
+    }
+    // print(box.length);
     await box.put(c.address, c);
 
     await Hive.close();
 
   }
+
+  Future<void> cleanContacts() async {
+    var finalCont=<Contact>[];
+    var box = await Hive.openBox('testBox');
+
+    contacts.forEach((element) async {
+      if(await BluetoothController.existsInBox(element.address)==true){
+        Contact c=await box.get(element.address);
+        if(c.close==false) {
+          print("Não era close o " + c.name);
+          print("Keys:"+box.keys.length.toString());
+          print("Length:"+box.length.toString());
+          finalCont.add(c);
+        }
+          print(box.length);
+      }
+    });
+
+
+
+    contacts=finalCont;
+  }
+
+  Future<void> verifyBlacklist() async {
+    var box = await Hive.openBox('testBox');
+    for(Contact c in box.values){
+      if(c.black) {
+        print("Tá black");
+        for (Contact c2 in contacts){
+          print("Comparando "+c.address+" com "+c2.address);
+          if (c2.address == c.address || c2.name == c.name)
+            {
+              return showDialog(
+                context: context,
+                builder: (BuildContext context) =>  AlertDialog(
+                  backgroundColor: Colors.red,
+                  title: Text("!Danger nearby!"+c2.address),
+                  // content:
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Close'),
+                      onPressed:() { Navigator.of(context).pop();},
+
+                    ),
+                  ],
+                ));
+            }}
+      }
+    }
+  }
+
+
 
 //   Future<void> start() async {
 //       Directory appDocDirectory = await getApplicationDocumentsDirectory();

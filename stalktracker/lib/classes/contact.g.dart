@@ -21,13 +21,15 @@ class ContactAdapter extends TypeAdapter<Contact> {
       proximity: fields[1] as int,
       address: fields[2] as String,
       date: fields[3] as DateTime?,
+      close: fields[4] as bool,
+      black: fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Contact obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -35,7 +37,11 @@ class ContactAdapter extends TypeAdapter<Contact> {
       ..writeByte(2)
       ..write(obj.address)
       ..writeByte(3)
-      ..write(obj.date);
+      ..write(obj.date)
+      ..writeByte(4)
+      ..write(obj.close)
+      ..writeByte(5)
+      ..write(obj.close);
   }
 
   @override

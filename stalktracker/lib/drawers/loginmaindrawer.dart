@@ -10,6 +10,7 @@ import 'package:hackathon/main.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../blacklist.dart';
 import '../friendspage.dart';
 import '../historypage.dart';
 
@@ -75,6 +76,20 @@ Drawer loginmaindrawer(BuildContext context) {
           onTap: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => friendspage()));
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.priority_high,
+            color: Colors.white,
+          ),
+          title: Text(
+            'Black List',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => blacklist()));
           },
         ),
         ListTile(
@@ -158,7 +173,7 @@ Drawer loginmaindrawer(BuildContext context) {
             Navigator.pop(context);
           },
         ),
-        SizedBox(height: 100),
+        SizedBox(height: 40),
         ListTile(
           title: FloatingActionButton.extended(
             onPressed: () async {

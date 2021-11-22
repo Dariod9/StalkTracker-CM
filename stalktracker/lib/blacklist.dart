@@ -9,15 +9,15 @@ import 'classes/contact.dart';
 
 
 
-class friendspage extends StatefulWidget {
+class blacklist extends StatefulWidget {
   @override
-  State<friendspage> createState() => _friendspage2();
+  State<blacklist> createState() => _blacklist2();
 }
 
-class _friendspage2 extends State<friendspage> {
+class _blacklist2 extends State<blacklist> {
 
   final contactcontroller = TextEditingController();
-  List<Contact> closes=[];
+  List<Contact> danger=[];
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _friendspage2 extends State<friendspage> {
                 },
                 icon: Icon(Icons.arrow_back)),
             title: Text(
-              'Friends List',
+              'Blacklist',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -56,7 +56,7 @@ class _friendspage2 extends State<friendspage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'List of Friends',
+                    'List of Danger Contacts',
                     style: TextStyle(color: Colors.white, fontSize: 25),
                   ),
                 ),
@@ -109,12 +109,12 @@ class _friendspage2 extends State<friendspage> {
                     try {
                       var result = await box.get(nome);
                       Contact c= result;
-                      c.close=true;
+                      c.black=true;
                       await box.put(c.address, c);
 
                       result = await box.get(nome);
                       c=result;
-                      print(c.close);
+                      print(c.black);
                     }
                     catch(e){
                       print("NÃO EXISTE ENDEREÇO");
@@ -124,7 +124,7 @@ class _friendspage2 extends State<friendspage> {
                       for(int i=0; i<box.length;i++){
                         Contact temp=await box.getAt(i);
                         if(temp.name==nome){
-                          temp.close=true;
+                          temp.black=true;
                           await box.put(temp.address, temp);
                           break;
                           }
@@ -149,45 +149,16 @@ class _friendspage2 extends State<friendspage> {
         ));
   }
 
-  Future<void> setCloseFriends() async {
-    String nome=contactcontroller.text;
-    var box = await Hive.openBox('testBox');
-
-    try {
-      var result = await box.get(nome);
-      Contact c= result;
-      c.close=true;
-      await box.put(c.address, c);
-    }
-    catch(e){
-      print("NÃO EXISTE ENDEREÇO");
-    }
-
-    try {
-      for(int i=0; i<box.length;i++){
-        Contact temp=await box.getAt(i);
-        if(temp.name==nome){
-          temp.close=true;
-          await box.put(temp.address, temp);
-          break;
-        }
-      }
-    }
-    catch(e){
-      print("NÃO EXISTE NOME");
-    }
-
-  }
   Widget listaDinamica(){
     return  new ListView.builder(
         padding: const EdgeInsets.all(16.0),
         shrinkWrap: true,
         physics: ScrollPhysics(),
-        itemCount: closes.length,
+        itemCount: danger.length,
         itemBuilder: (BuildContext ctxt, int index){
-          for(int i=0;i<closes.length;i++) print(closes[index].name+"\n");
-          if(closes.length==0) return new Text("No devices!");
-          else return _drawTile(closes[index]);
+          for(int i=0;i<danger.length;i++) print(danger[index].name+"\n");
+          if(danger.length==0) return new Text("No devices!");
+          else return _drawTile(danger[index]);
         }
     );
   }
@@ -201,9 +172,9 @@ class _friendspage2 extends State<friendspage> {
   }
 
   Future<void> scan() async {
-    closes= await BluetoothController.getClose();
-    print("CLOSES: ");
-    print(closes[0].toString());
+    danger= await BluetoothController.getBlack();
+    print("DANGER: ");
+    // print(danger[0].toString());
     setState(() {
 
     });

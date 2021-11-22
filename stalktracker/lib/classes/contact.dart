@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 @HiveType(typeId: 1)
 class Contact {
-  Contact({required this.name, required this.proximity, required this.address, required this.date});
+  Contact({required this.name, required this.proximity, required this.address, required this.date, required this.close, required this.black});
 
   @HiveField(0)
   String name;
@@ -22,6 +22,12 @@ class Contact {
 
   @HiveField(3)
   DateTime? date;
+
+  @HiveField(4)
+  bool close;
+
+  @HiveField(5)
+  bool black;
   // @HiveField(4)
   // List<Figuras> asdasd
 
@@ -43,6 +49,10 @@ class Contact {
       case 3: return Icon(Icons.signal_cellular_4_bar, color: Colors.red);
       default:     return Icon(Icons.dangerous, color: Colors.white);
     }
+  }
+
+  String toString(){
+    return "Name: "+this.name+" Address: "+this.address+" Close: "+this.close.toString()+" Black: "+this.black.toString();
   }
 
 
