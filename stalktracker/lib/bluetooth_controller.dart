@@ -158,6 +158,18 @@ class BluetoothController {
     }
     return close;
   }
+
+  static void clearClose() async {
+    var box = await Hive.openBox('testBox');
+
+    for (Contact c in box.values) {
+      if(c.close==true) {
+        Contact c2 = c;
+        c2.black=false;
+        await box.put(c.address,c2);
+      }
+    }
+  }
 }
   // authentication() async {
   //   if (_googleSignIn.isSignedIn() == true) {

@@ -62,6 +62,7 @@ class _loginpageState extends State<afterloginmainpage> {
 
   List<Contact> contactsNow= <Contact>[];
   List<Contact> contacts= <Contact>[];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -338,6 +339,7 @@ class _loginpageState extends State<afterloginmainpage> {
   }
 
   Future<void> verifyBlacklist() async {
+    BluetoothController.clearClose();
     var box = await Hive.openBox('testBox');
     for(Contact c in box.values){
       if(c.black) {

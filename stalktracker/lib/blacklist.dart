@@ -22,6 +22,7 @@ class _blacklist2 extends State<blacklist> {
   @override
   void initState() {
     scan();
+    BluetoothController.clearClose();
   }
 
   void mailLaunch(command) async {
@@ -103,36 +104,21 @@ class _blacklist2 extends State<blacklist> {
                   child:FloatingActionButton.extended(
                   heroTag: "2",
                   onPressed: () async {
-                    String nome=contactcontroller.text;
+                    String endereco=contactcontroller.text;
                     var box = await Hive.openBox('testBox');
 
                     try {
-                      var result = await box.get(nome);
+                      var result = await box.get(endereco);
                       Contact c= result;
                       c.black=true;
                       await box.put(c.address, c);
-
-                      result = await box.get(nome);
-                      c=result;
+                      print("Address");
                       print(c.black);
                     }
                     catch(e){
                       print("NÃO EXISTE ENDEREÇO");
                     }
 
-                    try {
-                      for(int i=0; i<box.length;i++){
-                        Contact temp=await box.getAt(i);
-                        if(temp.name==nome){
-                          temp.black=true;
-                          await box.put(temp.address, temp);
-                          break;
-                          }
-                        }
-                    }
-                    catch(e){
-                      print("NÃO EXISTE NOME");
-                    }
                     scan();
                     setState(() {
 
