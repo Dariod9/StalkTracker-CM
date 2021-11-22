@@ -1,4 +1,5 @@
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hackathon/profile.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -193,10 +194,23 @@ class _friendspage2 extends State<friendspage> {
   }
 
   Widget _drawTile(Contact c){
-    return ListTile(
+    String name="";
+    if(c.name.contains(":")) name="(no name)";
+    else name=c.name;
+
+    return ElevatedButton(
+      onPressed: () { Navigator.of(context).push(MaterialPageRoute(builder:(context)=>profile(c))); },
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+      child: ListTile(
         leading: Icon(Icons.bluetooth, color: Colors.white,),
-        title: new Text(c.name, style: TextStyle(color: Colors.white),),
-        trailing: c.distanceIcon(c)
+        title: new Text(name, style: TextStyle(color: Colors.white),),
+        trailing: Wrap(
+          spacing: -15,
+          children: <Widget>[
+            Icon(Icons.signal_cellular_4_bar, color: Colors.green),
+          ],
+        ),
+      ),
     );
   }
 

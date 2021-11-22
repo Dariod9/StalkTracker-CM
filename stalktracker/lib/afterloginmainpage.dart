@@ -10,6 +10,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hackathon/collegeinfo.dart';
 import 'package:hackathon/drawers/loginmaindrawer.dart';
+import 'package:hackathon/profile.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -176,6 +177,10 @@ class _loginpageState extends State<afterloginmainpage> {
   }
 
   Widget _drawTile(Contact c){
+    String name="";
+    if(c.name.contains(":")) name="(no name)";
+    else name=c.name;
+
     if(c.black){
       return ElevatedButton(
       onLongPress: (){
@@ -208,11 +213,11 @@ class _loginpageState extends State<afterloginmainpage> {
               ),
             ],
           ));},
-      onPressed: () {  },
+      onPressed: () { Navigator.of(context).push(MaterialPageRoute(builder:(context)=>profile(c))); },
         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
       child: ListTile(
         leading: Icon(Icons.bluetooth, color: Colors.white,),
-        title: new Text(c.name, style: TextStyle(color: Colors.white),),
+        title: new Text(name, style: TextStyle(color: Colors.white),),
         trailing: Wrap(
           spacing: 10,
           children: <Widget>[
@@ -250,11 +255,11 @@ class _loginpageState extends State<afterloginmainpage> {
       child: const Text('Close'),
       onPressed:() { Navigator.of(context).pop();},),],
         ));},
-      onPressed: () {  },
+      onPressed: () { Navigator.of(context).push(MaterialPageRoute(builder:(context)=>profile(c))); },
       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
       child: ListTile(
         leading: Icon(Icons.bluetooth, color: Colors.white,),
-        title: new Text(c.name, style: TextStyle(color: Colors.white),),
+        title: new Text(name, style: TextStyle(color: Colors.white),),
         trailing: Wrap(
           spacing: -15,
           children: <Widget>[
