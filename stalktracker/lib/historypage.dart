@@ -146,9 +146,7 @@ class _historypageState extends State<historypage> {
   }
 
   Widget _buildRow(Contact c){
-    String name="";
-    if(c.name.contains(":")) name="(no name)";
-    else name=c.name;
+    String name=c.name;
 
     return ElevatedButton(
       onPressed: () { Navigator.of(context).push(MaterialPageRoute(builder:(context)=>profile(c))); },

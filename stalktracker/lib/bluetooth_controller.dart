@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -52,6 +53,7 @@ class BluetoothController {
         if(r.device.name!=null) nome=r.device.name!;
         else nome=r.device.address;
 
+
         var c;
 
         var box = await Hive.openBox('testBox');
@@ -61,7 +63,11 @@ class BluetoothController {
               address: r.device.address,
               date: DateTime.now(),
               close: false,
-              black: false);
+              black: false,
+              path1: "",
+              path2: "",
+              path3: "",
+        );
 
 
         contactos.add(c);

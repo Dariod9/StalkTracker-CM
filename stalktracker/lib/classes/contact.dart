@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 @HiveType(typeId: 1)
 class Contact {
-  Contact({required this.name, required this.proximity, required this.address, required this.date, required this.close, required this.black});
+  Contact({required this.name, required this.proximity, required this.address, required this.date, required this.close, required this.black, required this.path1, required this.path2, required this.path3});
 
   @HiveField(0)
   String name;
@@ -28,6 +28,15 @@ class Contact {
 
   @HiveField(5)
   bool black;
+
+  @HiveField(6)
+  String path1;
+
+  @HiveField(7)
+  String path2;
+
+  @HiveField(8)
+  String path3;
   // @HiveField(4)
   // List<Figuras> asdasd
 

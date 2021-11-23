@@ -177,9 +177,7 @@ class _loginpageState extends State<afterloginmainpage> {
   }
 
   Widget _drawTile(Contact c){
-    String name="";
-    if(c.name.contains(":")) name="(no name)";
-    else name=c.name;
+    String name=c.name;
 
     if(c.black){
       return ElevatedButton(
