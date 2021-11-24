@@ -43,51 +43,6 @@ Drawer maindrawer(BuildContext context) {
         ),
         ListTile(
           leading: Icon(
-            Icons.star,
-            color: Colors.white,
-          ),
-          title: Text(
-            'Friends List',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => friendspage()));
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.priority_high,
-            color: Colors.white,
-          ),
-          title: Text(
-            'Black List',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => blacklist()));
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.calendar_today,
-            color: Colors.white,
-          ),
-          title: Text(
-            'History',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => historypage(),
-                ));
-          },
-        ),
-        ListTile(
-          leading: Icon(
             Icons.info_outline_rounded,
             color: Colors.white,
           ),
